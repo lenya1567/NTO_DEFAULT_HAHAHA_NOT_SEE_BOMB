@@ -24,7 +24,7 @@ set_position = rospy.ServiceProxy('set_position', srv.SetPosition)
 set_velocity = rospy.ServiceProxy('set_velocity', srv.SetVelocity)
 set_attitude = rospy.ServiceProxy('set_attitude', srv.SetAttitude)
 set_rates = rospy.ServiceProxy('set_rates', srv.SetRates)
-land = rospy.ServiceProxy('land', Trigger)```python
+land = rospy.ServiceProxy('land', Trigger)
 
 oil_detection = rospy.Publisher('/oil_detect', Image, queue_size=1)
 defect_detection = rospy.Publisher('/defect_detect', Image, queue_size=1)
