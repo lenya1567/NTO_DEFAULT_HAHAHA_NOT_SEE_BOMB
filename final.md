@@ -1,3 +1,7 @@
+# Итоговый отчёт команды "Rакет@67"
+
+## Импортирование библиотек
+
 ```import cv2
 import math
 from pyzbar import pyzbar
@@ -6,8 +10,11 @@ from cv_bridge import CvBridge
 from clover import srv
 from std_srvs.srv import Trigger
 from sensor_msgs.msg import Image'''
+```python3
 
-rospy.init_node('flight')
+## Создание топиков и сервисов ROS
+
+```rospy.init_node('flight')
 bridge = CvBridge()
 
 get_telemetry = rospy.ServiceProxy('get_telemetry', srv.GetTelemetry)
@@ -17,7 +24,7 @@ set_position = rospy.ServiceProxy('set_position', srv.SetPosition)
 set_velocity = rospy.ServiceProxy('set_velocity', srv.SetVelocity)
 set_attitude = rospy.ServiceProxy('set_attitude', srv.SetAttitude)
 set_rates = rospy.ServiceProxy('set_rates', srv.SetRates)
-land = rospy.ServiceProxy('land', Trigger)
+land = rospy.ServiceProxy('land', Trigger)```python
 
 # Topics
 
@@ -192,4 +199,4 @@ rospy.sleep(15)
 can_line_fly = True
 
 rospy.spin()
-```python3
+```python
