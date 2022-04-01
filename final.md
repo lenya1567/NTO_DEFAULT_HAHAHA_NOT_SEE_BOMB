@@ -1,5 +1,6 @@
 # Итоговый отчёт команды "Rакет@67"
-```import cv2
+```
+import cv2
 import math
 from pyzbar import pyzbar
 import rospy
@@ -7,11 +8,10 @@ from cv_bridge import CvBridge
 from clover import srv
 from std_srvs.srv import Trigger
 from sensor_msgs.msg import Image
-```python3
 
 ### Создание топиков и сервисов ROS
 
-```rospy.init_node('flight')
+rospy.init_node('flight')
 bridge = CvBridge()
 
 get_telemetry = rospy.ServiceProxy('get_telemetry', srv.GetTelemetry)
