@@ -1,7 +1,4 @@
 # Итоговый отчёт команды "Rакет@67"
-
-## Импортирование библиотек
-
 ```import cv2
 import math
 from pyzbar import pyzbar
@@ -28,11 +25,10 @@ land = rospy.ServiceProxy('land', Trigger)
 
 oil_detection = rospy.Publisher('/oil_detect', Image, queue_size=1)
 defect_detection = rospy.Publisher('/defect_detect', Image, queue_size=1)
-```python
 
-### Инициализация констант, связанных с границами распознавания цвета: нижний и верхний порог
 
-```
+# Инициализация констант, связанных с границами распознавания цвета: нижний и верхний порог
+
 # Colors
 
 blue = ((90, 60, 70), (116, 255, 255))
@@ -41,29 +37,23 @@ orange = ((0, 27, 70), (20, 255, 255))
 
 # Line color
 
-our_line_color = yellow
-```python3
+our_line_color = yellow 
 
-### Переменные
-
-```can_line_fly``` - флаг, по которому коптер понимает, что можно начать распознавать и двигаться по линии
-```qrcode``` - 
-
-```
 # Bools
 
-can_line_fly = False
+can_line_fly = False # можно ли лететь по линии
+qrcode = None # данные в QR-коде
 
-qrcode = None
-
-def image_callback(data):
+def image_callback(data): # Функция, которая получает из топика фотографии с частотой 5Гц (это сделано для того, чтобы OpenCV, которая достаточно тяжела для обработки, не занимала 100% процессора
 
     global our_line_color, orange, can_line_fly, qrcode
 
+    # Получение фотографии с коптера и преобразование её в фото для обработки OpenCV (и создания её копий)
     image = bridge.imgmsg_to_cv2(data, 'bgr8')
     oil_image = image.copy()
     defect_image = image.copy()
 
+    # Считывание QR-кода и запись его данных в перменную qrcode
     barcodes = pyzbar.decode(image)
     for barcode in barcodes:
         b_data = barcode.data.decode("utf-8")
@@ -72,13 +62,16 @@ def image_callback(data):
         xc = x + w/2
         yc = y + h/2
         qrcode = b_data
-
+    
+    # Преобразование из кодировки BGR в HSV 
     img_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     img_line_th = cv2.inRange(img_hsv, our_line_color[0], our_line_color[1])
     img_oil_th = cv2.inRange(img_hsv, orange[0], orange[1])
 
+    
     H, W, _ = image.shape
 
+    # Распознавание контуров в изображениях
     img_line_cnts, _ = cv2.findContours(img_line_th, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     img_line_cnts.sort(key = cv2.contourArea)
 
@@ -130,16 +123,12 @@ def image_callback(data):
             cx2 = int(m['m10'] / m['m00'])
             cy2 = int(m['m01'] / m['m00'])
 
-            #error = cx - W // 2
-
-            #cv2.drawContours(image, [line_contour], 0, (0, 0, 255), 5)
-
             alpha = math.atan((cx2 - cx1) / (cy2 - cy1)) / math.pi * 180
 
             cv2.line(image, (cx1, cy1), (cx2, cy2), (255, 255, 255), 5)
-
-            #print ( round(alpha, 2), 'grad' )
-
+            
+            #  Полёт по линии
+            
             set_velocity(vx = 0.1, vy = 0, vz = 0, yaw=float('nan'), yaw_rate=alpha*0.05, frame_id='body')
 
     if len(img_line_cnts) > 1 and can_line_fly:
