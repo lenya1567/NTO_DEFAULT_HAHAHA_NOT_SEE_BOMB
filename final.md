@@ -9,10 +9,10 @@ import rospy
 from cv_bridge import CvBridge
 from clover import srv
 from std_srvs.srv import Trigger
-from sensor_msgs.msg import Image'''
+from sensor_msgs.msg import Image
 ```python3
 
-## Создание топиков и сервисов ROS
+### Создание топиков и сервисов ROS
 
 ```rospy.init_node('flight')
 bridge = CvBridge()
@@ -26,10 +26,13 @@ set_attitude = rospy.ServiceProxy('set_attitude', srv.SetAttitude)
 set_rates = rospy.ServiceProxy('set_rates', srv.SetRates)
 land = rospy.ServiceProxy('land', Trigger)```python
 
-# Topics
-
 oil_detection = rospy.Publisher('/oil_detect', Image, queue_size=1)
 defect_detection = rospy.Publisher('/defect_detect', Image, queue_size=1)
+```python
+
+### Инициализация констант, связанных с границами распознавания цвета: нижний и верхний порог
+
+```
 # Colors
 
 blue = ((90, 60, 70), (116, 255, 255))
@@ -39,7 +42,14 @@ orange = ((0, 27, 70), (20, 255, 255))
 # Line color
 
 our_line_color = yellow
+```python3
 
+### Переменные
+
+```can_line_fly``` - флаг, по которому коптер понимает, что можно начать распознавать и двигаться по линии
+```qrcode``` - 
+
+```
 # Bools
 
 can_line_fly = False
